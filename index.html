@@ -10,12 +10,18 @@
   LÁMINA DE CONCURSO · QUÁLITAS SAN JERÓNIMO 492 · RE+ARQ
   Formato A1 vertical (594 × 841 mm · ratio 1:1.414)
 ───────────────────────────────────────────────────────────────────────
-  Layout vertical de dos bandas:
-    · Banda 1 · Hero (exterior) + Sección longitudinal
-    · Banda 2 · Atrio interior + Axonométrico explotado
+  CÓMO USAR
+  1. Coloca las 4 imágenes en una carpeta /images junto a este archivo:
+       images/01-hero.png          (relación 4:5  · render exterior)
+       images/02-seccion.png       (relación 3:4  · sección longitudinal)
+       images/03-atrio.png         (relación 3:4  · atrio interior)
+       images/04-axonometrico.png  (relación 3:4  · axonométrico)
+  2. Abre el archivo en el navegador. Si falta una imagen, el hueco
+     muestra un marcador con la relación de aspecto que espera.
+  3. Para exportar: imprimir → "Guardar como PDF" → tamaño A1, sin márgenes.
 ───────────────────────────────────────────────────────────────────────
-  Imágenes en /images con los nombres del README.
-  Para exportar: imprimir → "Guardar como PDF" → A1, sin márgenes.
+  La proporción está bloqueada con container query units (cqw/cqh):
+  todo escala con el ancho de la lámina, en pantalla y en impresión.
 ═══════════════════════════════════════════════════════════════════════
 -->
 
@@ -26,16 +32,16 @@
 <style>
 /* ─── TOKENS DE MARCA RE+ARQ ─────────────────────────────────────── */
 :root{
-  --cream:  #FAF8F2;
-  --ink:    #0A0A0A;
-  --gray:   #6B6B68;
-  --yellow: #F0E500;
-  --line:   #D8D4C8;
+  --cream:  #FAF8F2;   /* fondo papel        */
+  --ink:    #0A0A0A;   /* tinta / carbón     */
+  --gray:   #6B6B68;   /* gris cálido sec.   */
+  --yellow: #F0E500;   /* amarillo acento    */
+  --line:   #D8D4C8;   /* hairline divisoria */
 
   --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
   --sans:  'Archivo', 'Helvetica Neue', Arial, sans-serif;
 
-  --margin: 6.7cqw;    /* 40 mm en A1                                  */
+  --margin: 6.7cqw;    /* margen interior de la lámina (= 40 mm en A1) */
   --gutter: 1.4cqw;    /* canalón entre columnas                       */
 }
 
@@ -64,14 +70,14 @@ html,body{
   aspect-ratio:594 / 841;
   background:var(--cream);
   color:var(--ink);
-  container-type:size;
+  container-type:size;                 /* habilita unidades cqw/cqh   */
   padding:var(--margin);
   display:grid;
   grid-template-rows:
      8%   /* header   */
      7%   /* tesis    */
-    36%   /* banda 1: hero + sección  */
-    32%   /* banda 2: atrio + axono   */
+    42%   /* hero     */
+    26%   /* técnica  */
     11%   /* concepto */
      6%;  /* footer   */
   box-shadow:0 2px 40px rgba(0,0,0,.18);
@@ -79,6 +85,7 @@ html,body{
   print-color-adjust:exact;
 }
 
+/* línea de acento amarilla reutilizable */
 .rule{ width:100%; background:var(--yellow); }
 
 /* ─── 1 · HEADER ─────────────────────────────────────────────────── */
@@ -130,22 +137,13 @@ html,body{
   text-align:center;
 }
 
-/* ─── 3-4 · BANDAS DE IMAGEN (2×2) ───────────────────────────────── */
-.bay-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:var(--gutter);
-  min-height:0;
-  padding-top:1.2cqh;
-}
-.bay{
+/* ─── 3 · HERO ───────────────────────────────────────────────────── */
+.hero{
   display:flex;
   flex-direction:column;
   min-height:0;
-  margin:0;
 }
-.bay__img{ flex:1; min-height:0; }
-
+.hero__img{ flex:1; }
 .caption{
   font-family:var(--serif);
   font-style:italic;
@@ -155,6 +153,21 @@ html,body{
   margin-top:0.9cqh;
   letter-spacing:0.01em;
 }
+
+/* ─── 4 · FILA TÉCNICA (3 columnas) ──────────────────────────────── */
+.technical{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:var(--gutter);
+  min-height:0;
+  padding-top:1.4cqh;
+}
+.tcol{
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.tcol__img{ flex:1; }
 
 /* ─── CONTENEDORES DE IMAGEN ─────────────────────────────────────── */
 .slot{
@@ -169,10 +182,13 @@ html,body{
   z-index:1;
   width:100%;
   height:100%;
-  object-fit:contain;        /* imagen completa centrada con margen crema */
+  object-fit:contain;        /* las imágenes se ven completas y centradas
+                                con margen crema; alterna a 'cover' si
+                                prefieres llenar el slot recortando      */
   object-position:center;
   display:block;
 }
+/* marcador visible solo cuando la imagen no ha cargado */
 .slot__ph{
   position:absolute; inset:0;
   display:flex; flex-direction:column;
@@ -227,6 +243,7 @@ html,body{
   color:var(--ink);
 }
 
+/* columna CALIDAD — palabra rectora, sin icono */
 .ccol--calidad{ justify-content:flex-start; }
 .ccol--calidad .ccol__word{
   font-family:var(--serif);
@@ -294,69 +311,63 @@ html,body{
       <p class="thesis__text">Una grieta de luz custodiada por dos cuerpos de piedra</p>
     </section>
 
-    <!-- 3 · BANDA 1 · Hero + Sección ───────────────────────────── -->
-    <section class="bay-row">
-      <figure class="bay">
-        <div class="slot bay__img">
-          <div class="slot__ph">
-            <b>01 · Render hero</b>
-            <span>relación 4:5 — images/01-hero.png</span>
-          </div>
-          <img src="images/01-hero.png" alt="Vista desde Av. San Jerónimo"
-               onload="this.previousElementSibling.style.display='none'"
-               onerror="this.style.display='none'">
+    <!-- 3 · HERO ───────────────────────────────────────────────── -->
+    <section class="hero">
+      <div class="slot hero__img">
+        <div class="slot__ph">
+          <b>01 · Render hero</b>
+          <span>relación 4:5 — images/01-hero.png</span>
         </div>
-        <figcaption class="caption">01 · Vista desde Av. San Jerónimo · Acceso principal</figcaption>
-      </figure>
+        <img src="images/01-hero.png" alt="Vista desde Av. San Jerónimo" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
+      </div>
+      <p class="caption">01 · Vista desde Av. San Jerónimo · Acceso principal</p>
+    </section>
 
-      <figure class="bay">
-        <div class="slot bay__img">
+    <!-- 4 · FILA TÉCNICA ───────────────────────────────────────── -->
+    <section class="technical">
+
+      <div class="tcol">
+        <div class="slot tcol__img">
           <div class="slot__ph">
             <b>02 · Sección</b>
             <span>relación 3:4 — images/02-seccion.png</span>
           </div>
-          <img src="images/02-seccion.png" alt="Sección longitudinal"
-               onload="this.previousElementSibling.style.display='none'"
-               onerror="this.style.display='none'">
+          <img src="images/02-seccion.png" alt="Sección longitudinal" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
         </div>
-        <figcaption class="caption">02 · Sección longitudinal · esc. 1:200</figcaption>
-      </figure>
-    </section>
+        <p class="caption">02 · Sección longitudinal · esc. 1:200</p>
+      </div>
 
-    <!-- 4 · BANDA 2 · Atrio + Axonométrico ─────────────────────── -->
-    <section class="bay-row">
-      <figure class="bay">
-        <div class="slot bay__img">
+      <div class="tcol">
+        <div class="slot tcol__img">
           <div class="slot__ph">
             <b>03 · Atrio</b>
             <span>relación 3:4 — images/03-atrio.png</span>
           </div>
-          <img src="images/03-atrio.png" alt="Atrio central desde lobby"
-               onload="this.previousElementSibling.style.display='none'"
-               onerror="this.style.display='none'">
+          <img src="images/03-atrio.png" alt="Atrio central desde lobby" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
         </div>
-        <figcaption class="caption">03 · Atrio central desde lobby</figcaption>
-      </figure>
+        <p class="caption">03 · Atrio central desde lobby</p>
+      </div>
 
-      <figure class="bay">
-        <div class="slot bay__img">
+      <div class="tcol">
+        <div class="slot tcol__img">
           <div class="slot__ph">
             <b>04 · Axonométrico</b>
             <span>relación 3:4 — images/04-axonometrico.png</span>
           </div>
-          <img src="images/04-axonometrico.png" alt="Axonométrico explotado"
-               onload="this.previousElementSibling.style.display='none'"
-               onerror="this.style.display='none'">
+          <img src="images/04-axonometrico.png" alt="Axonométrico explotado" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
         </div>
-        <figcaption class="caption">04 · Axonométrico explotado · sistema constructivo</figcaption>
-      </figure>
+        <p class="caption">04 · Axonométrico explotado · sistema constructivo</p>
+      </div>
+
     </section>
 
     <!-- 5 · CONCEPTO ───────────────────────────────────────────── -->
     <section class="concept">
 
+      <!-- PROTECCIÓN -->
       <div class="ccol">
         <div class="ccol__icon">
+          <!-- cuadrado que contiene un cuadrado menor desplazado -->
           <svg viewBox="0 0 48 48" aria-hidden="true">
             <rect x="4"  y="4"  width="40" height="40"/>
             <rect x="17" y="17" width="18" height="18"/>
@@ -366,8 +377,10 @@ html,body{
         <p class="ccol__body">Una envolvente que cuida lo que tiene dentro y honra lo que tiene afuera. Espalda muda al fraccionamiento, frente sereno a la avenida.</p>
       </div>
 
+      <!-- PERMANENCIA -->
       <div class="ccol">
         <div class="ccol__icon">
+          <!-- tres barras horizontales de grosor decreciente -->
           <svg viewBox="0 0 48 48" aria-hidden="true">
             <line x1="4" y1="14" x2="44" y2="14" style="stroke-width:4"/>
             <line x1="4" y1="25" x2="44" y2="25" style="stroke-width:2.4"/>
@@ -378,8 +391,10 @@ html,body{
         <p class="ccol__body">Materiales que envejecen con dignidad. Piedra basáltica del Pedregal, concreto cincelado, madera nacional. Activo patrimonial a cien años.</p>
       </div>
 
+      <!-- DISCRECIÓN -->
       <div class="ccol">
         <div class="ccol__icon">
+          <!-- una línea sobre otra más corta y desplazada -->
           <svg viewBox="0 0 48 48" aria-hidden="true">
             <line x1="4"  y1="20" x2="44" y2="20"/>
             <line x1="16" y1="30" x2="38" y2="30"/>
@@ -389,6 +404,7 @@ html,body{
         <p class="ccol__body">El edificio no agota su potencial. Cede al espacio público lo que la avenida necesita. Presencia sin estridencia.</p>
       </div>
 
+      <!-- CALIDAD · palabra rectora -->
       <div class="ccol ccol--calidad">
         <div class="ccol__word">Calidad</div>
         <p class="ccol__body">Quálitas. La palabra latina que da nombre a la empresa. La ética que ordena todas las decisiones de proyecto.</p>
